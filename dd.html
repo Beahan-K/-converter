@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moving Chinese Dragon — CSS & SVG Animation</title>
+  <style>
+    :root{
+      --bg:#071428;
+      --accent:#f6b03a;
+      --scale:1;
+    }
+    html,body{height:100%;margin:0}
+    body{
+      background: linear-gradient(180deg,#071428 0%, #0b2a3e 60%);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;color:white
+    }
+
+    .stage{
+      width:100%;height:100vh;position:relative;
+      --dragon-size:560px;
+    }
+
+    /* Scenic clouds */
+    .cloud{position:absolute;top:6%;left:10%;width:220px;opacity:.12;filter:blur(10px)}
+    .cloud.right{left:auto;right:5%;top:18%;width:300px;opacity:.08}
+
+    /* Dragon wrapper will move along a curved path using CSS motion-path */
+    .dragon-wrap{
+      position:absolute;top:0;left:0;width:var(--dragon-size);height:220px;transform-origin:center center;
+      /* use offset-path to move the dragon along an SVG path defined below */
+      offset-path: path('M -20 55 C 120 20, 420 20, 560 55 C 740 110, 880 110, 1060 55');
+      -webkit-offset-path: path('M -20 55 C 120 20, 420 20, 560 55 C 740 110, 880 110, 1060 55');
+      animation: glide 9s linear infinite;
+      will-change:transform,offset-distance;
+      offset-rotate: auto;
+      -webkit-offset-rotate: auto;
+      offset-distance: 0%;
+      -webkit-offset-distance: 0%;
+    }
+
+    @keyframes glide{
+      0%{offset-distance:0%; -webkit-offset-distance:0%; transform:scaleX(1) translateY(0)}
+      50%{offset-distance:100%; -webkit-offset-distance:100%; transform:scaleX(-1) translateY(-

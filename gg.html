@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moving Leaves Animation</title>
+  <style>
+    /* Page styling */
+    :root{
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --accent: #88c057;
+    }
+    html,body{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial}
+    body{
+      background: linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 60%);
+      overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+      color:#e6eef8;
+    }
+
+    /* Scene container */
+    .scene{
+      width:100%;height:100%;position:relative;
+      perspective:900px; /* gives subtle depth */
+    }
+
+    /* Ground (optional) */
+    .ground{
+      position:absolute;left:0;right:0;bottom:0;height:18vh;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.25));
+      pointer-events:none;
+    }
+
+    /* Single leaf wrapper */
+    .leaf{
+      position:absolute; top:-10vh; /* start above the viewport */
+      left:50%;
+      width:80px;height:80px;
+      transform-origin:50% 50%;
+      will-change:transform,opacity;
+      opacity:.95;
+      filter:drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+      animation-name:fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      pointer-events:none;
+    }
+
+    /* SVG fills scale responsively inside leaf */
+    .leaf svg{width:100%;height:100%;display:block}
+
+    /* A second, subtle rotation animation (wobble) */
+    .leaf .wobble{animation:spin infinite linear;}
+
+    /* Keyframes: falling downwards and swaying side-to-side */
+    @keyframes fall{
+      0%{transform: translate3d(var(--x,0), -12vh, var(--z,0)) rotate(var(--r,0)); opacity:0}
+      8%{opacity:1}
+      40%{transform: translate3d(calc(var(--x,0) - 12vw), 30vh, var(--z,0)) rotate(calc(var(--r,0) + 30deg));}
+      70%{transform: translate3d(calc(var(--x,0) + 14vw), 70vh, var(--z,0)) rotate(calc(var(--r,0) - 90deg));}
+      100%{transform: translate3d(calc(var(--x,0) - 6vw), 120vh, var(--z,0)) rotate(calc(var(--r,0) + 180deg)); opacity:0}
+    }
+
+    /* small slow rotation for organic effect */
+    @keyframes spin{
+      from{transform:rotate(0deg)} to{transform:rotate(360deg)}
+    }
+
+    /* Variation rules for each leaf - change size, position, delay, duration, color */
+    .leaf:nth-child(1){--x:-35vw; --r:-10deg; --z:-50px; left:10%; width:72px; animation-duration:12s; animation-delay:0s}
+    .leaf:nth-child(2){--x:-12vw; --r:30deg; --z:-10px; left:22%; width:52px; animation-duration:9.5s; animation-delay:1.6s}
+    .leaf:nth-child(3){--x:4vw;   --r:8deg;  --z:20px;  left:34%; width:96px; animation-duration:14s; animation-delay:.8s}
+    .leaf:nth-child(4){--x:22vw;  --r:-18deg; --z:40px; left:46%; width:64px; animation-duration:10.5s; animation-delay:2.2s}
+    .leaf:nth-child(5){--x:48vw;  --r:6deg;  --z:80px;  left:58%; width:86px; animation-duration:13s; animation-delay:.4s}
+    .leaf:nth-child(6){--x:12vw;  --r:-6deg; --z:10px; left:70%; width:44px; animation-duration:8.5s; animation-delay:3.1s}
+    .leaf:nth-child(7){--x:-28vw; --r:20deg; --z:-20px; left:82%; width:76px; animation-duration:11.2s; animation-delay:1.1s}
+    .leaf:nth-child(8){--x:36vw;  --r:-28deg; --z:120px; left:92%; width:58px; animation-duration:15s; animation-delay:.2s}
+
+    /* Color variation by targeting the SVG path */
+    .leaf svg path{transition:fill .25s ease}
+    .leaf:nth-child(odd) svg path{fill:#7fb04a}
+    .leaf:nth-child(even) svg path{fill:#5fa23a}
+
+    /* Make smaller screens use smaller leaves */
+    @media (max-width:640px){
+      .leaf{width:44px;height:44px}
+      .leaf:nth-child(3){width:56px}
+    }
+
+    /* small caption center */
+    .title{
+      position:absolute;top:12%;left:50%;transform:translateX(-50%);
+      font-size:clamp(16px,2.2vw,22px);opacity:.9;text-align:center
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" aria-hidden="true">
+    <div class="title">Autumn breeze — CSS only moving leaves</div>
+
+    <!-- Eight leaves with an inline SVG shape -->
+    <div class="leaf" style="--x:-30vw; --r:-6deg;">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 32c8-8 20-14 32-12 4 0 8 2 12 6 4 4 6 8 4 12s-6 8-10 10c-6 4-12 4-18 2-8-2-18-8-20-18z"/>
+      </svg>
+    </div>
+
+    <div class="leaf">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6 30c7-10 18-16 30-14 6 1 12 5 15 10 3 5 2 9-2 13-4 4-10 7-16 8-7 2-17 0-23-7-3-4-4-8-4-10z"/>
+      </svg>
+    </div>
+
+    <div class="leaf">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M8 28c10-8 22-12 34-8 5 2 9 5 12 9s3 10-2 14c-5 5-12 8-20 8-10 0-20-6-24-18-1-4-1-7 0-13z"/>
+      </svg>
+    </div>
+
+    <div class="leaf">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M2 34c9-11 22-17 36-14 4 1 8 3 11 6 4 4 5 9 1 14-5 6-12 9-19 10-9 1-20-3-26-12-2-3-3-6-3-10z"/>
+      </svg>
+    </div>
+
+    <div class="leaf">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M10 24c9-6 20-8 30-5 7 2 12 6 15 12 
